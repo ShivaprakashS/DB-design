@@ -43,7 +43,7 @@ CREATE TABLE property (
   house_rules VARCHAR(50),
  PRIMARY KEY(property_id, property_type),
  FOREIGN KEY(host_user_id) REFERENCES airbnb_user(user_id),
- FOREIGN KEY(review_id) REFERENCES feedback(review_id),
+ FOREIGN KEY(review_id) REFERENCES feedback(review_id)
 );
 
 CREATE TABLE feedback (
