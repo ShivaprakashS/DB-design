@@ -49,7 +49,6 @@ CREATE TABLE feedback (
   review_id INT NOT NULL,
   customer_user_id INT,
   ratings INT ,
-  review_total INT,
   recommendations VARCHAR(20),
  PRIMARY KEY (review_id),
  FOREIGN KEY (customer_user_id) REFERENCES customer (user_id)
@@ -107,7 +106,7 @@ CREATE TABLE restaurant (
   property_type VARCHAR(15) NOT NULL,
   cuisine VARCHAR(15),
   menu VARCHAR(15),
-  bar VARCHAR(15),
+  booking_date VARCHAR(15),
   total_seats INT,
   available_seats INT,
 PRIMARY KEY(property_id, property_type),
