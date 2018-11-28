@@ -23,8 +23,8 @@ CREATE TABLE customer (
   email  VARCHAR(20) NOT NULL,
   phone_number CHAR(10),
   payment_details VARCHAR(20),
-PRIMARY KEY(user_id),
-FOREIGN KEY(user_id) REFERENCES airbnb_user(User_ID)
+ PRIMARY KEY(user_id),
+ FOREIGN KEY(user_id) REFERENCES airbnb_user(User_ID)
 );
 
 
