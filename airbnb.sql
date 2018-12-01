@@ -42,8 +42,6 @@ AFTER EACH ROW IS
 BEGIN
     IF :new.property_type = 'Restaurant' THEN
         rest_upd_after_order(:new.property_id,:new.property_type,:new.guest_count,:new.check_in_date);
-    ELSE
-    DBMS_OUTPUT.PUT_LINE('need to code');
     END IF;
 END AFTER EACH ROW;
 
@@ -65,8 +63,8 @@ END;
 /
 CREATE OR REPLACE PROCEDURE bad_feedback_chk(bproperty_id IN booking_order.property_id%TYPE) AS
 CURSOR feed_bk_chk IS
-select property_id,avg(ratings) as avg_ratings from feedback  
-       group by property_id having count(*)> 2; 
+    select property_id,avg(ratings) as avg_ratings from feedback  
+           group by property_id having count(*)> 2; 
 cur_ptr feed_bk_chk%ROWTYPE;
 BEGIN
 open feed_bk_chk;
@@ -84,19 +82,19 @@ END;
 CREATE OR REPLACE PROCEDURE bonus_check AS
 random_val_1 INT;
 CURSOR fetch_host_id IS
-select host_user_id from booking_order group by host_user_id having count(*) = 50;
-cur_ptr fetch_host_id%ROWTYPE;
+    select host_user_id from booking_order group by host_user_id having count(*) = 50;
+    cur_ptr fetch_host_id%ROWTYPE;
 BEGIN
-open fetch_host_id;
+    open fetch_host_id;
 LOOP
     FETCH fetch_host_id into cur_ptr;
     IF fetch_host_id%NOTFOUND THEN
     EXIT;
     ELSE
-    select dbms_random.value(900,999) into random_val_1 from dual ;
-   insert into payment values(random_val_1,9999,'card',1000,cur_ptr.host_user_id);
+        select dbms_random.value(900,999) into random_val_1 from dual ;
+        insert into payment values(random_val_1,9999,'card',1000,cur_ptr.host_user_id);
     END IF;
 END LOOP;
-close fetch_host_id;
+    close fetch_host_id;
 END;
 /
