@@ -2,11 +2,11 @@
 drop table booking_calendar;
 drop table restaurant;
 drop table amenities_and_features;
-drop table feedback;
-drop table property;
 drop table payment;
 drop table booking_order;
-drop table  customer;
+drop table feedback;
+drop table property;
+drop table customer;
 drop table host;
 drop table airbnb_user;
 
@@ -23,8 +23,8 @@ CREATE TABLE customer (
   email  VARCHAR(20) NOT NULL,
   phone_number CHAR(10),
   payment_details VARCHAR(20),
- PRIMARY KEY(user_id),
- FOREIGN KEY(user_id) REFERENCES airbnb_user(User_ID)
+PRIMARY KEY(user_id),
+FOREIGN KEY(user_id) REFERENCES airbnb_user(User_ID)
 );
 
 
@@ -39,20 +39,11 @@ CREATE TABLE host (
  FOREIGN KEY(user_id) REFERENCES airbnb_user(user_id)
 );
 
-CREATE TABLE feedback (
-  review_id INT NOT NULL,
-  customer_user_id VARCHAR(20),
-  ratings INT ,  
-  recommendations VARCHAR(20),
- PRIMARY KEY (review_id),
- FOREIGN KEY (customer_user_id) REFERENCES customer (user_id)
-);
 
 CREATE TABLE property (
   property_id INT NOT NULL,
   property_type VARCHAR(15) NOT NULL,
   host_user_id VARCHAR(20) NOT NULL,
-  review_id INT NOT NULL,
   room_type VARCHAR(15),
   capacity INT NOT NULL,
   address_line_1  VARCHAR(15),
@@ -65,10 +56,23 @@ CREATE TABLE property (
   special_offer VARCHAR(50),
   house_rules VARCHAR(50),
  PRIMARY KEY(property_id, property_type),
- FOREIGN KEY(host_user_id) REFERENCES airbnb_user(user_id),
-  FOREIGN KEY(review_id) REFERENCES feedback(review_id)
+ FOREIGN KEY(host_user_id) REFERENCES airbnb_user(user_id)
 );
 
+
+CREATE TABLE feedback (
+  review_id INT NOT NULL,
+  customer_user_id VARCHAR(20),
+  property_id INT NOT NULL,
+  property_type VARCHAR(15) NOT NULL,
+  ratings INT ,  
+  recommendations VARCHAR(20),
+ PRIMARY KEY (review_id),
+ FOREIGN KEY (customer_user_id) REFERENCES customer (user_id),
+ FOREIGN KEY (property_id,property_type) REFERENCES property (property_id,property_type)
+ on delete cascade
+ );
+ 
 CREATE TABLE amenities_and_features (
   property_id INT NOT NULL,
   property_type VARCHAR(15) NOT NULL,
@@ -84,6 +88,7 @@ CREATE TABLE amenities_and_features (
   cleaning  CHAR(10),
  PRIMARY KEY (property_id, property_type),
 FOREIGN KEY (property_id, property_type) REFERENCES property (property_id, property_type)
+on delete cascade
 );
 
 CREATE TABLE booking_order (
@@ -92,15 +97,16 @@ CREATE TABLE booking_order (
   property_type VARCHAR(15) NOT NULL,
   host_user_id VARCHAR(20) NOT NULL,
   customer_user_id VARCHAR(20) NOT NULL,
-  reserved_dates DATE,
+  reserved_dates CHAR(10),
   guest_count INT NOT NULL,
-  order_date DATE,
+  order_date CHAR(10),
   order_price INT,
-  check_in_date DATE,
-  check_out_date DATE,
-  move_out_date DATE,
+  check_in_date CHAR(10),
+  check_out_date CHAR(10),
+  move_out_date CHAR(10),
  PRIMARY KEY(order_number),
-FOREIGN KEY(property_id,property_type) REFERENCES property(property_id,property_type),
+FOREIGN KEY(property_id,property_type) REFERENCES property(property_id,property_type)
+on delete cascade,
 FOREIGN KEY(host_user_id) REFERENCES host(user_id),
 FOREIGN KEY(customer_user_id) REFERENCES customer(user_id)
 );
@@ -109,7 +115,7 @@ CREATE TABLE payment (
   payment_id INT NOT NULL,
   order_number INT NOT NULL,
   payment_type VARCHAR(15) NOT NULL,
-  amount DECIMAL(4,2),
+  amount INT,
   host_user_id VARCHAR(20) NOT NULL,
   PRIMARY KEY(payment_id),
   FOREIGN KEY(order_number) REFERENCES booking_order(order_number),
@@ -127,12 +133,14 @@ CREATE TABLE restaurant (
   available_seats INT,
 PRIMARY KEY(property_id, property_type),
 FOREIGN KEY(property_id, property_type) REFERENCES property(property_id, property_type)
+on delete cascade
 );
 
 CREATE TABLE booking_calendar (
   property_id INT NOT NULL,
   property_type VARCHAR(15) NOT NULL,
-  booked_dates DATE,
+  booked_dates CHAR(10),
   PRIMARY KEY(property_id),
   FOREIGN KEY(property_id,property_type) REFERENCES property (property_id,property_type)
+  on delete cascade
 );
